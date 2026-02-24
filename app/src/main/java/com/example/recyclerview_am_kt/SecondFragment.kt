@@ -18,6 +18,20 @@ class SecondFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var word :String? = null
+
+    private var position =-1
+
+
+    // recibiendo parametros con bundle
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            word = it.getString("selectedWord")
+            position = it.getInt("position",-1)
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +46,53 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+
+         binding!!.textViewSelected.text = word
+         binding!!.editTextWord.setText(word)
+
+
+        // Botón para actualizar palabra
+
+       binding!!.buttonUpdate.setOnClickListener {
+
+           val newWord = binding!!.editTextWord.text.toString()
+           if(position >=0){// Validación
+
+               val bundle = Bundle()
+               bundle.putInt("position", position)
+               bundle.putString("newWord",newWord)
+               parentFragmentManager.setFragmentResult("updateWord",bundle)
+               parentFragmentManager.popBackStack()
+
+           }
+
+
+
+
+
+
+
+
+       }
+
+
+        // Botón para eliminar palabra
+
+        binding!!.buttonDelete.setOnClickListener {
+
+            val newWord = binding!!.editTextWord.text.toString()
+            if(position >=0){// Validación
+
+                val bundle = Bundle()
+                bundle.putInt("position", position)
+                parentFragmentManager.setFragmentResult("deleteWord",bundle)
+                parentFragmentManager.popBackStack()
+
+            }
+
         }
+
+
     }
 
     override fun onDestroyView() {

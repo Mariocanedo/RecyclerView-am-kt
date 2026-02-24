@@ -1,8 +1,10 @@
 package com.example.recyclerview_am_kt
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.ForwardingListener
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerview_am_kt.databinding.WordItemListBinding
 
@@ -13,7 +15,8 @@ import com.example.recyclerview_am_kt.databinding.WordItemListBinding
 
 class WordAdapter (
     /***************** Paso 1.Representación de los datos */
-    private val mwordList : MutableList<String?>
+    private val mwordList : MutableList<String>,
+    private val listener: (String,Int)-> Unit // 👈 //enviamos palabra +posicion
 
 ): RecyclerView.Adapter<WordAdapter.WordViewHolder?>() {
 
@@ -37,10 +40,21 @@ class WordAdapter (
      // paso 6 ESTE  MÉTODO DIBUJA LAS VISTAS
     // VA POSICIONANDO CADA ELEMENTO DEL RV
 
-    override fun onBindViewHolder(holder: WordViewHolder, position: Int
-    ) {
-        val element = mwordList.get(position)
-        holder.textView.setText(element)
+    override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
+       // val element = mwordList.get(position)
+       // holder.textView.setText(element)
+        val element = mwordList[position]
+        holder.textView.text= element
+
+        // Log cuando se asigna cada item
+        Log.d("WordAdapter","onBindViewHolder : position=$position, word= $element")
+        // Click listener
+
+        holder.itemView.setOnClickListener {
+            // Log antes de llamar al listener
+            Log.d("WordAdapter", "Item clicked: word=$element, position=$position")
+            listener(element, position)
+        }
     }
 
 
